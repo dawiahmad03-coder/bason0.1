@@ -21,6 +21,8 @@ export default function Home() {
 
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState<string>("");
+  const [walletRefreshKey, setWalletRefreshKey] = useState<number>(0);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
 
   useEffect(() => {
     let mounted = true;
@@ -35,8 +37,10 @@ export default function Home() {
   }, [setMiniAppReady]);
 
   useEffect(() => {
-    console.log("MiniKit context:", context);
-    console.log("Wallet connector:", sdk.wallet);
+    if (process.env.NODE_ENV !== "production") {
+      console.log("MiniKit context:", context);
+      console.log("Wallet connector:", sdk.wallet);
+    }
   }, [context]);
 
   useEffect(() => {
@@ -91,20 +95,42 @@ export default function Home() {
   const connectWallet = async () => {
     if (!context) return;
     try {
+      setIsConnecting(true);
       const provider = await sdk.wallet.getEthereumProvider();
       if (!provider) return;
       await provider.request({ method: "eth_requestAccounts" });
+      setWalletRefreshKey((k) => k + 1);
     } catch (e) {
       console.error(e);
     }
+    finally {
+      setIsConnecting(false);
+    }
   };
+
+  useEffect(() => {
+    let unsub: (() => void) | undefined;
+    const attach = async () => {
+      const provider = await sdk.wallet.getEthereumProvider();
+      if (!provider) return;
+      const onAccountsChanged = () => setWalletRefreshKey((k) => k + 1);
+      provider.on("accountsChanged", onAccountsChanged);
+      unsub = () => provider.removeListener("accountsChanged", onAccountsChanged);
+    };
+    attach();
+    return () => {
+      if (unsub) unsub();
+    };
+  }, [context]);
 
   return (
     <div className={styles.container}>
       <header className={styles.headerWrapper}>
-        {isMiniAppReady && context ? <Wallet /> : null}
+        {isMiniAppReady && context ? <Wallet key={walletRefreshKey} /> : null}
         {isMiniAppReady && context ? (
-          <button className={styles.addButton} onClick={connectWallet}>Connect Wallet</button>
+          <button className={styles.addButton} onClick={connectWallet} disabled={isConnecting}>
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
+          </button>
         ) : null}
       </header>
 
