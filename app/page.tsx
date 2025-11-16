@@ -26,7 +26,7 @@ export default function Home() {
     let mounted = true;
     const run = async () => {
       const ok = await sdk.actions.ready().then(() => true).catch(() => false);
-      if (mounted && ok) setMiniAppReady(true);
+      if (mounted && ok) setMiniAppReady();
     };
     run();
     return () => {
@@ -88,6 +88,17 @@ export default function Home() {
 
   const doneCount = todos.filter((t) => t.done).length;
 
+  const connectWallet = async () => {
+    if (!context) return;
+    try {
+      const provider = await sdk.wallet.getEthereumProvider();
+      if (!provider) return;
+      await provider.request({ method: "eth_requestAccounts" });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.headerWrapper}>
@@ -146,11 +157,3 @@ export default function Home() {
     </div>
   );
 }
-  const connectWallet = async () => {
-    if (!isMiniAppReady || !context) return;
-    try {
-      await sdk.wallet.requestWallet();
-    } catch (e) {
-      console.error(e);
-    }
-  };
