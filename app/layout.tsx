@@ -9,6 +9,27 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: minikitConfig.miniapp.name,
     description: minikitConfig.miniapp.description,
+    metadataBase: new URL(minikitConfig.miniapp.homeUrl),
+    openGraph: {
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
+      url: minikitConfig.miniapp.homeUrl,
+      type: "website",
+      images: [
+        {
+          url: minikitConfig.miniapp.ogImageUrl,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
+      images: [minikitConfig.miniapp.ogImageUrl],
+    },
+    icons: {
+      icon: "/icon.png",
+    },
     other: {
       "fc:miniapp": JSON.stringify({
         version: minikitConfig.miniapp.version,
