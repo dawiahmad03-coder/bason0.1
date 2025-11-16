@@ -35,6 +35,11 @@ export default function Home() {
   }, [setMiniAppReady]);
 
   useEffect(() => {
+    console.log("MiniKit context:", context);
+    console.log("Wallet connector:", sdk.wallet);
+  }, [context]);
+
+  useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) {
@@ -87,6 +92,9 @@ export default function Home() {
     <div className={styles.container}>
       <header className={styles.headerWrapper}>
         {isMiniAppReady && context ? <Wallet /> : null}
+        {isMiniAppReady && context ? (
+          <button className={styles.addButton} onClick={connectWallet}>Connect Wallet</button>
+        ) : null}
       </header>
 
       <div className={styles.todoApp}>
@@ -138,3 +146,11 @@ export default function Home() {
     </div>
   );
 }
+  const connectWallet = async () => {
+    if (!isMiniAppReady || !context) return;
+    try {
+      await sdk.wallet.requestWallet();
+    } catch (e) {
+      console.error(e);
+    }
+  };
