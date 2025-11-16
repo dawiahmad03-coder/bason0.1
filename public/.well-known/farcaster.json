@@ -13,19 +13,19 @@
     "subtitle": "Liste de tâches",
     "description": "Mini app de productivité pour créer et suivre vos tâches.",
     "screenshotUrls": [
-      ""
+      "https://raw.githubusercontent.com/dawiahmad03-coder/bason0.1/main/public/screenshot.png"
     ],
-    "iconUrl": "",
-    "splashImageUrl": "",
+    "iconUrl": "https://raw.githubusercontent.com/dawiahmad03-coder/bason0.1/main/public/icon.png",
+    "splashImageUrl": "https://raw.githubusercontent.com/dawiahmad03-coder/bason0.1/main/public/splash.png",
     "splashBackgroundColor": "#000000",
-    "homeUrl": "",
+    "homeUrl": "https://github.com/dawiahmad03-coder/bason0.1",
     "webhookUrl": "",
     "primaryCategory": "productivity",
     "tags": ["productivity", "todo"],
-    "heroImageUrl": "",
+    "heroImageUrl": "https://raw.githubusercontent.com/dawiahmad03-coder/bason0.1/main/public/hero.png",
     "tagline": "Gérez vos tâches au quotidien",
     "ogTitle": "Bason Todo",
     "ogDescription": "Créez, suivez et terminez vos tâches au quotidien.",
-    "ogImageUrl": ""
+    "ogImageUrl": "https://raw.githubusercontent.com/dawiahmad03-coder/bason0.1/main/public/hero.png"
   }
 }
