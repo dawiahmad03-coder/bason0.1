@@ -13,7 +13,7 @@ type Todo = {
 };
 
 export default function Home() {
-  const { setMiniAppReady, isMiniAppReady: _isMiniAppReady, context } = useMiniKit();
+  const { setMiniAppReady, isMiniAppReady, context } = useMiniKit();
   const storageKey = useMemo(
     () => `bason:todos:${context?.user?.fid ?? "guest"}`,
     [context?.user?.fid]
@@ -25,10 +25,8 @@ export default function Home() {
   useEffect(() => {
     let mounted = true;
     const run = async () => {
-      try {
-        await sdk.actions.ready();
-      } catch {}
-      if (mounted) setMiniAppReady();
+      const ok = await sdk.actions.ready().then(() => true).catch(() => false);
+      if (mounted && ok) setMiniAppReady(true);
     };
     run();
     return () => {
@@ -88,7 +86,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <header className={styles.headerWrapper}>
-        <Wallet />
+        {isMiniAppReady && context ? <Wallet /> : null}
       </header>
 
       <div className={styles.todoApp}>
